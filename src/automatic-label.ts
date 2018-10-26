@@ -31,7 +31,7 @@ function getLabelNames(labels) {
   return labelNames;
 }
 
-function setCustomerLabel() {
+function automaticLabel() {
   var start = new Date();
   var email = Session.getActiveUser().getEmail();
   var executes = new Array();
