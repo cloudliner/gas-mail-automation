@@ -2,7 +2,8 @@
   "timeZone": "Asia/Tokyo",
   "oauthScopes": [
     "https://www.googleapis.com/auth/script.send_mail",
-    "https://www.googleapis.com/auth/spreadsheets"
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://mail.google.com/"
   ],
   "dependencies": {
   },
