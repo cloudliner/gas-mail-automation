@@ -1,39 +1,39 @@
-const deleteSpreadsheetId = '1VneCqoMD28HW93COYPxmV3FrjSL5IlVvwz4MngtSqHE';
+const deleteSpreadsheetId = "1VneCqoMD28HW93COYPxmV3FrjSL5IlVvwz4MngtSqHE";
 
 function automaticDelete() {
-  var start = new Date();
-  var email = Session.getActiveUser().getEmail();
-  var executes = new Array();
+  const start = new Date();
+  const email = Session.getActiveUser().getEmail();
+  const executes = new Array();
 
   try {
-    var spreadsheet = SpreadsheetApp.openById(deleteSpreadsheetId);
-    
-    var sheetSettings = spreadsheet.getSheetByName('Settings');
-    var rangeSettings = sheetSettings.getRange(2, 1, sheetSettings.getLastRow() - 1, sheetSettings.getLastColumn());
-    var rowSettings = rangeSettings.getValues();
-    
-    rowSettings.forEach(function(rowSetting) {
-      var settingName = rowSetting[0];
-      var generalCondition = rowSetting[1];
-      var delayDays = rowSetting[2] as number;
+    const spreadsheet = SpreadsheetApp.openById(deleteSpreadsheetId);
 
-      var maxDate = new Date();
+    const sheetSettings = spreadsheet.getSheetByName("Settings");
+    const rangeSettings = sheetSettings.getRange(2, 1, sheetSettings.getLastRow() - 1, sheetSettings.getLastColumn());
+    const rowSettings = rangeSettings.getValues();
+
+    rowSettings.forEach((rowSetting) => {
+      const settingName = rowSetting[0];
+      const generalCondition = rowSetting[1];
+      const delayDays = rowSetting[2] as number;
+
+      const maxDate = new Date();
       maxDate.setDate(maxDate.getDate() - delayDays);
-      
-      var y = maxDate.getFullYear();
-      var m = maxDate.getMonth() + 1;
-      var d = maxDate.getDate() + 1;
-      
+
+      const y = maxDate.getFullYear();
+      const m = maxDate.getMonth() + 1;
+      const d = maxDate.getDate() + 1;
+
       // 1回で最大100件削除
-      var threads = GmailApp.search(generalCondition + ' before:' + y + '/' + m + '/' + d, 0, 100);
-      var isExecuted = false;
-      
-      threads.forEach(function(thread) {
-        var toBeDeleted = true;
-        var messageSubject = thread.getFirstMessageSubject();
-        var from = thread.getMessages()[0].getFrom();
-        var date = thread.getLastMessageDate();
-        
+      const threads = GmailApp.search(`${generalCondition} before: ${y}/${m}/${d}`, 0, 100);
+      let isExecuted = false;
+
+      threads.forEach((thread) => {
+        let toBeDeleted = true;
+        const messageSubject = thread.getFirstMessageSubject();
+        const from = thread.getMessages()[0].getFrom();
+        const date = thread.getLastMessageDate();
+
         if (maxDate < date) {
           toBeDeleted = false;
         }
@@ -46,45 +46,45 @@ function automaticDelete() {
         if (thread.hasStarredMessages()) {
           toBeDeleted = false;
         }
-        
+
         if (toBeDeleted) {
           thread.moveToTrash();
           if (!isExecuted) {
             isExecuted = true;
             Logger.log('<span style="font-weight: bold;">%s &gt;----</span><br/>', settingName);
           }
-          Logger.log('Subject: %s, From: %s, Date: %s<br/>', messageSubject, from, date);
+          Logger.log("Subject: %s, From: %s, Date: %s<br/>", messageSubject, from, date);
         }
-        
-        var now = Date.now();
-        var pastTime = (now - start.getTime())/1000;
+
+        const now = Date.now();
+        const pastTime = (now - start.getTime()) / 1000;
         if (280 < pastTime) {
-          throw 'TimeOutException';
+          throw new Error("TimeOutException");
         }
       });
-      
+
       if (isExecuted) {
         executes.push(settingName);
         Logger.log('<span style="font-weight: bold;">----&gt; %s</span><br/>', settingName);
       }
     });
     if (executes.length !== 0) {
-      var executesTitle = executes.join(', ');
-      var body = Logger.getLog();
-      MailApp.sendEmail(email, 'GAS-Log: Automatic Delete: ' + executesTitle, body,
-                        { htmlBody: body, noReply: true });
+      const executesTitle = executes.join(", ");
+      const htmlBody = Logger.getLog();
+      MailApp.sendEmail(email, `GAS-Log: Automatic Delete: ${executesTitle}`, htmlBody,
+                        { htmlBody, noReply: true });
     }
-  } catch(e) {
-    var errorTitle = 'Error';
-    if (e === 'TimeOutException') {
-      errorTitle = 'TimeOut';
+  } catch (e) {
+    let errorTitle = "Error";
+    if (e.message === "TimeOutException") {
+      errorTitle = "TimeOut";
       Logger.log(e);
     } else {
       Logger.log('%s: %s (line: %s, file: "%s") Stack: "%s"<br/>',
-                    e.name||'', e.message||'', e.lineNumber||'', e.fileName||'', e.stack||'');
+                    e.name || "", e.message || "", e.lineNumber || "", e.fileName || "", e.stack || "");
     }
-    var body = Logger.getLog();
-    MailApp.sendEmail(email, 'GAS-Log: Automatic Delete: ' + errorTitle, body,
-                      { htmlBody: body, noReply: true });
+    const htmlBody = Logger.getLog();
+    MailApp.sendEmail(email, `GAS-Log: Automatic Delete: ${errorTitle}`, htmlBody,
+                      { htmlBody, noReply: true });
   }
 }

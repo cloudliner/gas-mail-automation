@@ -1,143 +1,152 @@
 const toLimitGrobal = 10;
-const labelSpreadsheetId = '1EYnNthMez3zFZlkkk9xt3-BxPv3y9oW4y5l8qfnwXDM';
+const labelSpreadsheetId = "1EYnNthMez3zFZlkkk9xt3-BxPv3y9oW4y5l8qfnwXDM";
 
 function automaticLabel() {
-  var start = new Date();
-  var email = Session.getActiveUser().getEmail();
-  var executes = new Array();
+  const start = new Date();
+  const email = Session.getActiveUser().getEmail();
+
   try {
-    var spreadsheet = SpreadsheetApp.openById(labelSpreadsheetId);
-    
-    var sheetSettings = spreadsheet.getSheetByName('Settings');
-    var rangeSettings = sheetSettings.getRange(2, 1, sheetSettings.getLastRow() - 1, sheetSettings.getLastColumn());
-    var rowSettings = rangeSettings.getValues();
-   
-    var generalCondition = 'is:inbox';
-    var hour = start.getHours();
-    var minute = start.getMinutes();
+    const spreadsheet = SpreadsheetApp.openById(labelSpreadsheetId);
+
+    const sheetSettings = spreadsheet.getSheetByName("Settings");
+    const rangeSettings = sheetSettings.getRange(2, 1, sheetSettings.getLastRow() - 1, sheetSettings.getLastColumn());
+    const rowSettings = rangeSettings.getValues();
+
+    const generalCondition = "is:inbox";
+    const hour = start.getHours();
+    const minute = start.getMinutes();
+    let threads: GoogleAppsScript.Gmail.GmailThread[];
+
     if (hour % 24 === 2 && minute < 15) {
-      var threads = GmailApp.search(generalCondition, 0, 200);
+      threads = GmailApp.search(generalCondition, 0, 200);
       Logger.log('<span style="font-weight: bold;">Running night batch for (%s)...</span><br/>', threads.length);
     } else {
-      var threads = GmailApp.search(generalCondition, 0, 50);
+      threads = GmailApp.search(generalCondition, 0, 50);
     }
 
-    var customers = new Array();
-    rowSettings.forEach(function(rowSetting) {
-      var customerLabelName = rowSetting[0] as string;
-      var productLabelNames = rowSetting[1] as string;
-      var addressStr = rowSetting[2] as string;
-      var subjectStr = rowSetting[3] as string;
-      var toLimitLocal = rowSetting[4];
+    const customers: Array<{
+      addressConditions: RegExp[];
+      labels: GoogleAppsScript.Gmail.GmailLabel[];
+      subjectConditions: RegExp[];
+      toLimit: number}> = [];
+    rowSettings.forEach((rowSetting) => {
+      const customerLabelName = rowSetting[0] as string;
+      const productLabelNames = rowSetting[1] as string;
+      const addressStr = rowSetting[2] as string;
+      const subjectStr = rowSetting[3] as string;
+      let toLimitLocal = rowSetting[4] as number;
       if (!toLimitLocal) {
         toLimitLocal = toLimitGrobal;
       }
 
-      var labelList = getLabelObjectList(productLabelNames);
-      var customerLabelObject = getLabelObject(customerLabelName);
-      labelList.push(customerLabelObject);
-      
-      var addressRegexs = [];
-      if (addressStr && addressStr.trim().length != 0) {
-        var addressStrs = addressStr.split(',');
-        addressStrs.forEach(function(simgleAddressStr) {
-          var addressRegex = new RegExp(simgleAddressStr.trim());
+      const labelList = getLabelObjectList(productLabelNames);
+      const customerLabelObject = getLabelObject(customerLabelName);
+      if (customerLabelObject) {
+        labelList.push(customerLabelObject);
+      }
+
+      const addressRegexs: RegExp[] = [];
+      if (addressStr && addressStr.trim().length !== 0) {
+        const addressStrs = addressStr.split(",");
+        addressStrs.forEach((simgleAddressStr) => {
+          const addressRegex = new RegExp(simgleAddressStr.trim());
           addressRegexs.push(addressRegex);
         });
       }
-      
-      var subjectRegexs = [];
-      if (subjectStr && subjectStr.trim().length != 0) {
-        var subjectStrs = subjectStr.split(',');
-        subjectStrs.forEach(function(simgleSubjectStr) {
-          var subjectRegex = new RegExp(simgleSubjectStr.trim().replace(/[\\^$.*+?()[\]{}|]/g, '\\$&'));
+
+      const subjectRegexs: RegExp[] = [];
+      if (subjectStr && subjectStr.trim().length !== 0) {
+        const subjectStrs = subjectStr.split(",");
+        subjectStrs.forEach((simgleSubjectStr) => {
+          const subjectRegex = new RegExp(simgleSubjectStr.trim().replace(/[\\^$.*+?()[\]{}|]/g, "\\$&"));
           subjectRegexs.push(subjectRegex);
         });
       }
-      
+
       customers.push({
         addressConditions: addressRegexs,
+        labels: labelList,
         subjectConditions: subjectRegexs,
-        labels:labelList,
-        toLimit:toLimitLocal
+        toLimit: toLimitLocal,
       });
     });
-    
-    var isExecuted = false;
-    
-    threads.forEach(function(thread) {
-      var lastMessage = thread.getMessages()[thread.getMessageCount() - 1];
-      var fromAddress = lastMessage.getFrom();
-      var to = lastMessage.getTo() ? lastMessage.getTo().split(',') : [];
-      var cc = lastMessage.getCc() ? lastMessage.getCc().split(',') : [];
-      var date = thread.getLastMessageDate();
-      var messageSubject = thread.getFirstMessageSubject();
-      
-      customers.forEach(function(customer) {
-        var addressConditions = customer.addressConditions;
-        var subjectConditions = customer.subjectConditions;
-        var labels = customer.labels;
-        var toLimit = customer.toLimit;
-        
+
+    let isExecuted = false;
+
+    threads.forEach((thread) => {
+      const lastMessage = thread.getMessages()[thread.getMessageCount() - 1];
+      const fromAddress = lastMessage.getFrom();
+      const to = lastMessage.getTo() ? lastMessage.getTo().split(",") : [];
+      const cc = lastMessage.getCc() ? lastMessage.getCc().split(",") : [];
+      const date = thread.getLastMessageDate();
+      const messageSubject = thread.getFirstMessageSubject();
+
+      customers.forEach((customer) => {
+        const addressConditions = customer.addressConditions;
+        const subjectConditions = customer.subjectConditions;
+        const labels = customer.labels;
+        const toLimit = customer.toLimit;
+
         if (toLimit < to.length) {
           return;
         }
-        
-        var match = false;
-        addressConditions.forEach(function(condition) {
+
+        let match = false;
+        addressConditions.forEach((condition) => {
           if (fromAddress && fromAddress.match(condition)) {
             match = true;
           }
-          to.forEach(function(toAddress) {
+          to.forEach((toAddress) => {
             if (toAddress && toAddress.match(condition)) {
               match = true;
             }
           });
-          cc.forEach(function(ccAddress) {
+          cc.forEach((ccAddress) => {
             if (ccAddress && ccAddress.match(condition)) {
               match = true;
             }
           });
         });
-        
-        subjectConditions.forEach(function(condition) {
+
+        subjectConditions.forEach((condition) => {
           if (messageSubject && messageSubject.match(condition)) {
             match = true;
           }
         });
-        
+
         if (match) {
           isExecuted = true;
-          Logger.log('Subject: %s, From: %s, Date: %s, Labels: %s<br/>', messageSubject, fromAddress, date, getLabelNames(labels));
-          labels.forEach(function(label) {
+          Logger.log("Subject: %s, From: %s, Date: %s, Labels: %s<br/>",
+            messageSubject, fromAddress, date, getLabelNames(labels));
+          labels.forEach((label) => {
             thread.addLabel(label);
           });
         }
       });
-      
-      var now = Date.now();
-      var pastTime = (now - start.getTime())/1000;
+
+      const now = Date.now();
+      const pastTime = (now - start.getTime()) / 1000;
       if (280 < pastTime) {
-        throw 'TimeOutException';
+        throw new Error("TimeOutException");
       }
     });
-    
+
     if (isExecuted) {
-      var body = Logger.getLog();
-      MailApp.sendEmail(email, 'GAS-Log:  Customer Label', body,
-                        { htmlBody: body, noReply: true });
+      const htmlBody = Logger.getLog();
+      MailApp.sendEmail(email, "GAS-Log:  Customer Label", htmlBody,
+                        { htmlBody, noReply: true });
     }
-  } catch(e) {
-    var errorTitle = 'Error';
-    if (e === 'TimeOutException') {
-      errorTitle = 'TimeOut';
+  } catch (e) {
+    let errorTitle = "Error";
+    if (e.message === "TimeOutException") {
+      errorTitle = "TimeOut";
       Logger.log(e);
     } else {
       Logger.log('%s: %s (line: %s, file: "%s") Stack: "%s"<br/>',
-                    e.name||'', e.message||'', e.lineNumber||'', e.fileName||'', e.stack||'');
+                    e.name || "", e.message || "", e.lineNumber || "", e.fileName || "", e.stack || "");
     }
-    var body = Logger.getLog();
-    MailApp.sendEmail(email, 'GAS-Log: Customer Label: ' + errorTitle, body,
-                      { htmlBody: body, noReply: true });
+    const htmlBody = Logger.getLog();
+    MailApp.sendEmail(email, `GAS-Log: Automatic Archive: ${errorTitle}`, htmlBody,
+                      { htmlBody, noReply: true });
   }
 }
