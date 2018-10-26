@@ -1,3 +1,3 @@
-const automaticDeleteTest= () => {
+function automaticDeleteTest() {
   console.log(`automaticDeleteTest`);
 }

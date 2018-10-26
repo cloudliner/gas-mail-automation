@@ -1,3 +1,3 @@
-const automaticLabelTest= () => {
+function automaticLabelTest() {
   console.log(`automaticLabelTest`);
 }

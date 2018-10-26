@@ -1,3 +1,3 @@
-const automaticArchiveTest= () => {
+function automaticArchiveTest() {
   console.log(`automaticArchiveTest`);
 }
