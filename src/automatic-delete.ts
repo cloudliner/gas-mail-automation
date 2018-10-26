@@ -1,10 +1,12 @@
+const deleteSpreadsheetId = '1VneCqoMD28HW93COYPxmV3FrjSL5IlVvwz4MngtSqHE';
+
 function automaticDelete() {
   var start = new Date();
   var email = Session.getActiveUser().getEmail();
   var executes = new Array();
 
   try {
-    var spreadsheet = SpreadsheetApp.openById('1VneCqoMD28HW93COYPxmV3FrjSL5IlVvwz4MngtSqHE');
+    var spreadsheet = SpreadsheetApp.openById(deleteSpreadsheetId);
     
     var sheetSettings = spreadsheet.getSheetByName('Settings');
     var rangeSettings = sheetSettings.getRange(2, 1, sheetSettings.getLastRow() - 1, sheetSettings.getLastColumn());
