@@ -13,7 +13,7 @@ function automaticDelete() {
     rowSettings.forEach(function(rowSetting) {
       var settingName = rowSetting[0];
       var generalCondition = rowSetting[1];
-      var delayDays = rowSetting[2];
+      var delayDays = rowSetting[2] as number;
 
       var maxDate = new Date();
       maxDate.setDate(maxDate.getDate() - delayDays);
@@ -54,8 +54,8 @@ function automaticDelete() {
           Logger.log('Subject: %s, From: %s, Date: %s<br/>', messageSubject, from, date);
         }
         
-        var now = new Date();
-        var pastTime = (now - start)/1000;
+        var now = Date.now();
+        var pastTime = (now - start.getTime())/1000;
         if (280 < pastTime) {
           throw 'TimeOutException';
         }
@@ -78,7 +78,7 @@ function automaticDelete() {
       errorTitle = 'TimeOut';
       Logger.log(e);
     } else {
-      Logger.severe('%s: %s (line: %s, file: "%s") Stack: "%s"<br/>',
+      Logger.log('%s: %s (line: %s, file: "%s") Stack: "%s"<br/>',
                     e.name||'', e.message||'', e.lineNumber||'', e.fileName||'', e.stack||'');
     }
     var body = Logger.getLog();

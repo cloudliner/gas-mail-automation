@@ -1,11 +1,12 @@
 const toLimitGrobal = 10;
+const labelSpreadsheetId = '1EYnNthMez3zFZlkkk9xt3-BxPv3y9oW4y5l8qfnwXDM';
 
 function automaticLabel() {
   var start = new Date();
   var email = Session.getActiveUser().getEmail();
   var executes = new Array();
   try {
-    var spreadsheet = SpreadsheetApp.openById('1EYnNthMez3zFZlkkk9xt3-BxPv3y9oW4y5l8qfnwXDM');
+    var spreadsheet = SpreadsheetApp.openById(labelSpreadsheetId);
     
     var sheetSettings = spreadsheet.getSheetByName('Settings');
     var rangeSettings = sheetSettings.getRange(2, 1, sheetSettings.getLastRow() - 1, sheetSettings.getLastColumn());
@@ -23,10 +24,10 @@ function automaticLabel() {
 
     var customers = new Array();
     rowSettings.forEach(function(rowSetting) {
-      var customerLabelName = rowSetting[0];
-      var productLabelNames = rowSetting[1];
-      var addressStr = rowSetting[2];
-      var subjectStr = rowSetting[3];
+      var customerLabelName = rowSetting[0] as string;
+      var productLabelNames = rowSetting[1] as string;
+      var addressStr = rowSetting[2] as string;
+      var subjectStr = rowSetting[3] as string;
       var toLimitLocal = rowSetting[4];
       if (!toLimitLocal) {
         toLimitLocal = toLimitGrobal;
@@ -114,8 +115,8 @@ function automaticLabel() {
         }
       });
       
-      var now = new Date();
-      var pastTime = (now - start)/1000;
+      var now = Date.now();
+      var pastTime = (now - start.getTime())/1000;
       if (280 < pastTime) {
         throw 'TimeOutException';
       }
@@ -132,7 +133,7 @@ function automaticLabel() {
       errorTitle = 'TimeOut';
       Logger.log(e);
     } else {
-      Logger.severe('%s: %s (line: %s, file: "%s") Stack: "%s"<br/>',
+      Logger.log('%s: %s (line: %s, file: "%s") Stack: "%s"<br/>',
                     e.name||'', e.message||'', e.lineNumber||'', e.fileName||'', e.stack||'');
     }
     var body = Logger.getLog();

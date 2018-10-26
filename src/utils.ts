@@ -1,4 +1,4 @@
-function getLabelObject(labelName) {
+function getLabelObject(labelName:string) {
   var labelObject = null;
   if (labelName && labelName.trim().length != 0) {
     labelName = labelName.trim();
@@ -7,7 +7,7 @@ function getLabelObject(labelName) {
   return labelObject;
 }
 
-function getLabelObjectList(labelNames) {
+function getLabelObjectList(labelNames:string) {
   var labelNameList = labelNames ? labelNames.split(',') : [];
   var labelList = [];
   labelNameList.forEach(function(labelName) {
