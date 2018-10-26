@@ -1,7 +1,3 @@
-function automaticDeleteTest() {
-  console.log(`automaticDeleteTest`);
-}
-
 function automaticDelete() {
   var start = new Date();
   var email = Session.getActiveUser().getEmail();
