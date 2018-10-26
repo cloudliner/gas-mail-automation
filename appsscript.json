@@ -1,5 +1,9 @@
 {
-  "timeZone": "America/New_York",
+  "timeZone": "Asia/Tokyo",
+  "oauthScopes": [
+    "https://www.googleapis.com/auth/script.send_mail",
+    "https://www.googleapis.com/auth/spreadsheets"
+  ],
   "dependencies": {
   },
   "exceptionLogging": "STACKDRIVER"
