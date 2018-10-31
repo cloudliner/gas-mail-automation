@@ -27,3 +27,25 @@ function getLabelNames(labels: GoogleAppsScript.Gmail.GmailLabel[]) {
   });
   return labelNames;
 }
+
+function handleExecuteLog(subTitle: string) {
+  const email = Session.getActiveUser().getEmail();
+  const htmlBody = Logger.getLog();
+  MailApp.sendEmail(email, `GAS-Log: ${subTitle}`, htmlBody,
+                    { htmlBody, noReply: true });
+}
+
+function handleException(e: any, subTitle: string) {
+  const email = Session.getActiveUser().getEmail();
+  let errorTitle = "Error";
+  if (e.message === "TimeOutException") {
+    errorTitle = "TimeOut";
+    Logger.log(e);
+  } else {
+    Logger.log('%s: %s (line: %s, file: "%s") Stack: "%s"<br/>',
+                  e.name || "", e.message || "", e.lineNumber || "", e.fileName || "", e.stack || "");
+  }
+  const htmlBody = Logger.getLog();
+  MailApp.sendEmail(email, `GAS-Log: ${subTitle}: ${errorTitle}`, htmlBody,
+                    { htmlBody, noReply: true });
+}

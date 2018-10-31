@@ -3,7 +3,6 @@ const archiveSpreadsheetId = "11GRPQyKcAVvmeLnFARytOmOr3vc0yBB4gP2NRFn7nmk";
 
 function automaticArchive() {
   const start = new Date();
-  const email = Session.getActiveUser().getEmail();
   const executes = new Array();
   try {
     const spreadsheet = SpreadsheetApp.openById(archiveSpreadsheetId);
@@ -144,22 +143,9 @@ function automaticArchive() {
       }
     });
     if (executes.length !== 0) {
-      const executesTitle = executes.join(", ");
-      const htmlBody = Logger.getLog();
-      MailApp.sendEmail(email, `GAS-Log: Automatic Archive: ${executesTitle}`, htmlBody,
-                        { htmlBody, noReply: true });
+      handleExecuteLog(`Automatic Archive: ${executes.join(", ")}`);
     }
   } catch (e) {
-    let errorTitle = "Error";
-    if (e.message === "TimeOutException") {
-      errorTitle = "TimeOut";
-      Logger.log(e);
-    } else {
-      Logger.log('%s: %s (line: %s, file: "%s") Stack: "%s"<br/>',
-                    e.name || "", e.message || "", e.lineNumber || "", e.fileName || "", e.stack || "");
-    }
-    const htmlBody = Logger.getLog();
-    MailApp.sendEmail(email, `GAS-Log: Automatic Archive: ${errorTitle}`, htmlBody,
-                      { htmlBody, noReply: true });
+    handleException(e, "Automatic Archive");
   }
 }

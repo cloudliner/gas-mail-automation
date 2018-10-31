@@ -2,7 +2,6 @@ const deleteSpreadsheetId = "1VneCqoMD28HW93COYPxmV3FrjSL5IlVvwz4MngtSqHE";
 
 function automaticDelete() {
   const start = new Date();
-  const email = Session.getActiveUser().getEmail();
   const executes = new Array();
 
   try {
@@ -69,22 +68,9 @@ function automaticDelete() {
       }
     });
     if (executes.length !== 0) {
-      const executesTitle = executes.join(", ");
-      const htmlBody = Logger.getLog();
-      MailApp.sendEmail(email, `GAS-Log: Automatic Delete: ${executesTitle}`, htmlBody,
-                        { htmlBody, noReply: true });
+      handleExecuteLog(`Automatic Delete: ${executes.join(", ")}`);
     }
   } catch (e) {
-    let errorTitle = "Error";
-    if (e.message === "TimeOutException") {
-      errorTitle = "TimeOut";
-      Logger.log(e);
-    } else {
-      Logger.log('%s: %s (line: %s, file: "%s") Stack: "%s"<br/>',
-                    e.name || "", e.message || "", e.lineNumber || "", e.fileName || "", e.stack || "");
-    }
-    const htmlBody = Logger.getLog();
-    MailApp.sendEmail(email, `GAS-Log: Automatic Delete: ${errorTitle}`, htmlBody,
-                      { htmlBody, noReply: true });
+    handleException(e, "Automatic Delete");
   }
 }

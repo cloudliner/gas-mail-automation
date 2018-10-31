@@ -3,7 +3,6 @@ const labelSpreadsheetId = "1EYnNthMez3zFZlkkk9xt3-BxPv3y9oW4y5l8qfnwXDM";
 
 function automaticLabel() {
   const start = new Date();
-  const email = Session.getActiveUser().getEmail();
 
   try {
     const spreadsheet = SpreadsheetApp.openById(labelSpreadsheetId);
@@ -132,21 +131,9 @@ function automaticLabel() {
     });
 
     if (isExecuted) {
-      const htmlBody = Logger.getLog();
-      MailApp.sendEmail(email, "GAS-Log:  Customer Label", htmlBody,
-                        { htmlBody, noReply: true });
+      handleExecuteLog("Customer Label");
     }
   } catch (e) {
-    let errorTitle = "Error";
-    if (e.message === "TimeOutException") {
-      errorTitle = "TimeOut";
-      Logger.log(e);
-    } else {
-      Logger.log('%s: %s (line: %s, file: "%s") Stack: "%s"<br/>',
-                    e.name || "", e.message || "", e.lineNumber || "", e.fileName || "", e.stack || "");
-    }
-    const htmlBody = Logger.getLog();
-    MailApp.sendEmail(email, `GAS-Log: Automatic Archive: ${errorTitle}`, htmlBody,
-                      { htmlBody, noReply: true });
+    handleException(e, "Automatic Label");
   }
 }
