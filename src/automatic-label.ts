@@ -33,10 +33,7 @@ function automaticLabel() {
       const productLabelNames = rowSetting[1] as string;
       const addressStr = rowSetting[2] as string;
       const subjectStr = rowSetting[3] as string;
-      let toLimitLocal = rowSetting[4] as number;
-      if (!toLimitLocal) {
-        toLimitLocal = toLimitGrobal;
-      }
+      const toLimitLocal = rowSetting[4] ? rowSetting[4] as number : toLimitGrobal;
 
       const labelList = getLabelObjectList(productLabelNames);
       const customerLabelObject = getLabelObject(customerLabelName);

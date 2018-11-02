@@ -12,8 +12,8 @@ function automaticDelete() {
     const rowSettings = rangeSettings.getValues();
 
     rowSettings.forEach((rowSetting) => {
-      const settingName = rowSetting[0];
-      const generalCondition = rowSetting[1];
+      const settingName = rowSetting[0] as string;
+      const generalCondition = rowSetting[1] as string;
       const delayDays = rowSetting[2] as number;
 
       const maxDate = new Date();

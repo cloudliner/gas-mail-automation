@@ -12,18 +12,14 @@ function automaticArchive() {
     const rowSettings = rangeSettings.getValues();
 
     rowSettings.forEach((rowSetting) => {
-      const settingName = rowSetting[0];
+      const settingName = rowSetting[0] as string;
       const generalCondition = rowSetting[1] as string;
       const delayDays = rowSetting[2] as number;
       const labelNames = rowSetting[3] as string;
       const detailConditionSheetName = rowSetting[4] as string;
       const labelsToBeRemovedSheetName = rowSetting[5] as string;
-      const ignoreImportance = rowSetting[6];
-      let searchMax = rowSetting[7] as number;
-
-      if (!searchMax) {
-        searchMax = searchMaxGrobal;
-      }
+      const ignoreImportance = rowSetting[6] as boolean;
+      const searchMax = rowSetting[7] ? rowSetting[7] as number : searchMaxGrobal;
 
       const maxDate = new Date(Date.now() - 86400000 * delayDays);
 
