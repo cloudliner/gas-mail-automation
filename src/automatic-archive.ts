@@ -2,6 +2,8 @@ import Utils from "./utils";
 
 const searchMaxGrobal = 10;
 const archiveSpreadsheetId = "11GRPQyKcAVvmeLnFARytOmOr3vc0yBB4gP2NRFn7nmk";
+// Automatic Archive Sample
+// https://docs.google.com/spreadsheets/d/1QVVpwG5GuvKh7eZCGjZY5sQbh-7mn-CpvuLjqjFy9mY
 
 function automaticArchive() {
   const start = new Date();

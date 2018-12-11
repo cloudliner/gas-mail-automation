@@ -1,6 +1,8 @@
 import Utils from "./utils";
 
 const deleteSpreadsheetId = "1VneCqoMD28HW93COYPxmV3FrjSL5IlVvwz4MngtSqHE";
+// Automatic Delete Sample
+// https://docs.google.com/spreadsheets/d/1uY2NOibaXGU5P8hw7r_ZgiwjIOswoFLE4v8Cn8kIVZ0
 
 function automaticDelete() {
   const start = new Date();

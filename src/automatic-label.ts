@@ -2,6 +2,8 @@ import Utils from "./utils";
 
 const toLimitGrobal = 10;
 const labelSpreadsheetId = "1EYnNthMez3zFZlkkk9xt3-BxPv3y9oW4y5l8qfnwXDM";
+// Automatic Label Sample
+// https://docs.google.com/spreadsheets/d/1-LVfu4oSbUHPUmX55Q-3bXMW-10tJPVRaVcnOhJpsa8
 
 function automaticLabel() {
   const start = new Date();
