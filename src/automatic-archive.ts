@@ -1,3 +1,5 @@
+import Utils from "./utils";
+
 const searchMaxGrobal = 10;
 const archiveSpreadsheetId = "11GRPQyKcAVvmeLnFARytOmOr3vc0yBB4gP2NRFn7nmk";
 
@@ -23,7 +25,7 @@ function automaticArchive() {
 
       const maxDate = new Date(Date.now() - 86400000 * delayDays);
 
-      const labels = getLabelObjectList(labelNames);
+      const labels = Utils.getLabelObjectList(labelNames);
 
       const hour = start.getHours();
       const minute = start.getMinutes();
@@ -139,9 +141,9 @@ function automaticArchive() {
       }
     });
     if (executes.length !== 0) {
-      handleExecuteLog(`Automatic Archive: ${executes.join(", ")}`);
+      Utils.handleExecuteLog(`Automatic Archive: ${executes.join(", ")}`);
     }
   } catch (e) {
-    handleException(e, "Automatic Archive");
+    Utils.handleException(e, "Automatic Archive");
   }
 }

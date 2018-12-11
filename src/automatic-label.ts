@@ -1,3 +1,5 @@
+import Utils from "./utils";
+
 const toLimitGrobal = 10;
 const labelSpreadsheetId = "1EYnNthMez3zFZlkkk9xt3-BxPv3y9oW4y5l8qfnwXDM";
 
@@ -35,8 +37,8 @@ function automaticLabel() {
       const subjectStr = rowSetting[3] as string;
       const toLimitLocal = rowSetting[4] ? rowSetting[4] as number : toLimitGrobal;
 
-      const labelList = getLabelObjectList(productLabelNames);
-      const customerLabelObject = getLabelObject(customerLabelName);
+      const labelList = Utils.getLabelObjectList(productLabelNames);
+      const customerLabelObject = Utils.getLabelObject(customerLabelName);
       if (customerLabelObject) {
         labelList.push(customerLabelObject);
       }
@@ -113,7 +115,7 @@ function automaticLabel() {
         if (match) {
           isExecuted = true;
           Logger.log("Subject: %s, From: %s, Date: %s, Labels: %s<br/>",
-            messageSubject, fromAddress, date, getLabelNames(labels));
+            messageSubject, fromAddress, date, Utils.getLabelNames(labels));
           labels.forEach((label) => {
             thread.addLabel(label);
           });
@@ -128,9 +130,9 @@ function automaticLabel() {
     });
 
     if (isExecuted) {
-      handleExecuteLog("Customer Label");
+      Utils.handleExecuteLog("Customer Label");
     }
   } catch (e) {
-    handleException(e, "Automatic Label");
+    Utils.handleException(e, "Automatic Label");
   }
 }

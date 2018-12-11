@@ -1,3 +1,5 @@
+import Utils from "./utils";
+
 const deleteSpreadsheetId = "1VneCqoMD28HW93COYPxmV3FrjSL5IlVvwz4MngtSqHE";
 
 function automaticDelete() {
@@ -68,9 +70,9 @@ function automaticDelete() {
       }
     });
     if (executes.length !== 0) {
-      handleExecuteLog(`Automatic Delete: ${executes.join(", ")}`);
+      Utils.handleExecuteLog(`Automatic Delete: ${executes.join(", ")}`);
     }
   } catch (e) {
-    handleException(e, "Automatic Delete");
+    Utils.handleException(e, "Automatic Delete");
   }
 }
