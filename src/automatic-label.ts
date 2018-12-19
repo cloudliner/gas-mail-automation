@@ -1,7 +1,5 @@
 import Utils from "./utils";
 
-const toLimitGrobal = 10;
-const labelSpreadsheetId = "1EYnNthMez3zFZlkkk9xt3-BxPv3y9oW4y5l8qfnwXDM";
 // Automatic Label Sample
 // https://docs.google.com/spreadsheets/d/1-LVfu4oSbUHPUmX55Q-3bXMW-10tJPVRaVcnOhJpsa8
 
@@ -9,6 +7,11 @@ function automaticLabel() {
   const start = new Date();
 
   try {
+    // const labelSpreadsheetId = "1-LVfu4oSbUHPUmX55Q-3bXMW-10tJPVRaVcnOhJpsa8";
+    const labelSpreadsheetId = Utils.getProperyValue("LabelSpreadsheetId");
+    // const toLimitGrobal = 10;
+    const toLimitGrobal = parseInt(Utils.getProperyValue("ToLimitGrobal"), 10);
+
     const spreadsheet = SpreadsheetApp.openById(labelSpreadsheetId);
 
     const sheetSettings = spreadsheet.getSheetByName("Settings");

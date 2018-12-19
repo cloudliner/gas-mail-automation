@@ -1,6 +1,9 @@
 # dependencies
 /node_modules
 
+# private 
+.clasprc.json
+
 # misc
 npm-debug.log
 yarn-error.log

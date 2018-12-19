@@ -1,4 +1,16 @@
 export default class Utils {
+  public static getProperyValue(property: string): string {
+    if (property) {
+      const value = ScriptProperties.getProperty(property);
+      if (value) {
+        return value;
+      }
+    }
+    const error = new Error("NoProperyException");
+    error.message = `No property value for: ${property}`;
+    throw error;
+  }
+
   public static getLabelObject(labelName: string): GoogleAppsScript.Gmail.GmailLabel | null {
     let labelObject = null;
     if (labelName && labelName.trim().length !== 0) {
