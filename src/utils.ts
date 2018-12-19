@@ -1,7 +1,7 @@
 export default class Utils {
   public static getProperyValue(property: string): string {
     if (property) {
-      const value = ScriptProperties.getProperty(property);
+      const value = PropertiesService.getScriptProperties().getProperty(property);
       if (value) {
         return value;
       }
