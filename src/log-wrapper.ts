@@ -6,28 +6,34 @@ export enum LogLevel {
 }
 
 export class LogWrapper {
-  public static getLog(level: LogLevel): string {
+  public static getLog(title: string, level: LogLevel): string {
     const log = Logger.getLog();
+    const content = log.split("<br/>");
+    const message = `${title}: [${content.length}]`;
+    const logObject = {
+      content,
+      message,
+    };
     switch (level) {
       case LogLevel.ERROR:
         // tslint:disable-next-line:no-console
-        console.error(log);
+        console.error(logObject);
         break;
       case LogLevel.WARN:
         // tslint:disable-next-line:no-console
-        console.warn(log);
+        console.warn(logObject);
         break;
       case LogLevel.INFO:
         // tslint:disable-next-line:no-console
-        console.info(log);
+        console.info(logObject);
         break;
       case LogLevel.DEBUG:
         // tslint:disable-next-line:no-console
-        console.debug(log);
+        console.debug(logObject);
         break;
       default:
         // tslint:disable-next-line:no-console
-        console.log(log);
+        console.log(logObject);
     }
     return log;
   }

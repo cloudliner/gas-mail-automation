@@ -45,8 +45,9 @@ export class Utils {
 
   public static handleExecuteLog(subTitle: string) {
     const email = Session.getActiveUser().getEmail();
-    const htmlBody = LogWrapper.getLog(LogLevel.INFO);
-    MailApp.sendEmail(email, `GAS-Log: ${subTitle}`, htmlBody,
+    const title = `GAS-Log: ${subTitle}`;
+    const htmlBody = LogWrapper.getLog(title, LogLevel.INFO);
+    MailApp.sendEmail(email, title, htmlBody,
                       { htmlBody, noReply: true });
   }
 
@@ -60,8 +61,9 @@ export class Utils {
       LogWrapper.log('%s: %s (line: %s, file: "%s") Stack: "%s"<br/>',
                     e.name || "", e.message || "", e.lineNumber || "", e.fileName || "", e.stack || "");
     }
-    const htmlBody = LogWrapper.getLog(LogLevel.ERROR);
-    MailApp.sendEmail(email, `GAS-Log: ${subTitle}: ${errorTitle}`, htmlBody,
+    const title = `GAS-Log: ${subTitle}: ${errorTitle}`;
+    const htmlBody = LogWrapper.getLog(title, LogLevel.ERROR);
+    MailApp.sendEmail(email, title, htmlBody,
                       { htmlBody, noReply: true });
   }
 }
