@@ -135,7 +135,7 @@ function automaticLabel() {
     });
 
     if (isExecuted) {
-      Utils.handleExecuteLog("Customer Label");
+      Utils.handleExecuteLog("Automatic Label");
     }
   } catch (e) {
     Utils.handleException(e, "Automatic Label");
