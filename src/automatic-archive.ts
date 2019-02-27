@@ -36,8 +36,8 @@ function automaticArchive() {
       const minute = start.getMinutes();
       let threads: GoogleAppsScript.Gmail.GmailThread[];
 
-      if (hour % 24 === 0 && minute < 15) {
-        threads = GmailApp.search(generalCondition);
+      if (hour % 24 === 0 && minute < 5) {
+        threads = GmailApp.search(generalCondition, 0, 100);
         Logger.log('<span style="font-weight: bold;">Running night batch for %s(%s)...</span><br/>',
           settingName, threads.length);
       } else {

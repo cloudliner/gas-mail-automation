@@ -11,6 +11,10 @@ function automaticLabel() {
     const labelSpreadsheetId = Utils.getProperyValue("LabelSpreadsheetId");
     // const toLimitGrobal = 10;
     const toLimitGrobal = parseInt(Utils.getProperyValue("ToLimitGrobal"), 10);
+    // const searchMaxGrobal = 10;
+    const searchMaxGrobal = parseInt(Utils.getProperyValue("SearchMaxGrobal"), 10);
+    // const searchMaxHourly = 50;
+    const searchMaxHourly = parseInt(Utils.getProperyValue("SearchMaxHourly"), 10);
 
     const spreadsheet = SpreadsheetApp.openById(labelSpreadsheetId);
 
@@ -23,11 +27,13 @@ function automaticLabel() {
     const minute = start.getMinutes();
     let threads: GoogleAppsScript.Gmail.GmailThread[];
 
-    if (hour % 24 === 2 && minute < 15) {
+    if (hour % 24 === 2 && minute < 5) {
       threads = GmailApp.search(generalCondition, 0, 200);
       Logger.log('<span style="font-weight: bold;">Running night batch for (%s)...</span><br/>', threads.length);
+    } else if (minute < 5) {
+      threads = GmailApp.search(generalCondition, 0, searchMaxHourly);
     } else {
-      threads = GmailApp.search(generalCondition, 0, 50);
+      threads = GmailApp.search(generalCondition, 0, searchMaxGrobal);
     }
 
     const customers: Array<{
