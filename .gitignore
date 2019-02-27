@@ -3,6 +3,7 @@
 
 # private 
 .clasprc.json
+.creds.json
 
 # misc
 npm-debug.log
