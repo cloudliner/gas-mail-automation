@@ -1,8 +1,15 @@
-export default class LogWrapper {
-  public static getLog(): string {
+export enum LogLevel {
+  DEBUG = "DEBUG",
+  INFO = "INFO",
+  WARN = "WARN",
+  ERROR = "ERROR",
+}
+
+export class LogWrapper {
+  public static getLog(level: LogLevel): string {
     const log = Logger.getLog();
     // tslint:disable-next-line:no-console
-    console.log(log);
+    console.log(log.replace("<br/>", "\n"), level);
     return log;
   }
 

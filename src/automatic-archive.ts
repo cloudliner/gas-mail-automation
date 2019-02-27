@@ -1,5 +1,5 @@
-import LogWrapper from "./log-wrapper";
-import Utils from "./utils";
+import { LogWrapper } from "./log-wrapper";
+import { Utils } from "./utils";
 
 // Automatic Archive Sample
 // https://docs.google.com/spreadsheets/d/1QVVpwG5GuvKh7eZCGjZY5sQbh-7mn-CpvuLjqjFy9mY
