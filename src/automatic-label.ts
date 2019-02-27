@@ -1,4 +1,5 @@
-import Utils from "./utils";
+import { LogWrapper } from "./log-wrapper";
+import { Utils } from "./utils";
 
 // Automatic Label Sample
 // https://docs.google.com/spreadsheets/d/1-LVfu4oSbUHPUmX55Q-3bXMW-10tJPVRaVcnOhJpsa8
@@ -29,7 +30,7 @@ function automaticLabel() {
 
     if (hour % 24 === 2 && minute < 5) {
       threads = GmailApp.search(generalCondition, 0, 200);
-      Logger.log('<span style="font-weight: bold;">Running night batch for (%s)...</span><br/>', threads.length);
+      LogWrapper.log('<span style="font-weight: bold;">Running night batch for (%s)...</span><br/>', threads.length);
     } else if (minute < 5) {
       threads = GmailApp.search(generalCondition, 0, searchMaxHourly);
     } else {
@@ -125,7 +126,7 @@ function automaticLabel() {
 
         if (match) {
           isExecuted = true;
-          Logger.log("Subject: %s, From: %s, Date: %s, Labels: %s<br/>",
+          LogWrapper.log("Subject: %s, From: %s, Date: %s, Labels: %s<br/>",
             messageSubject, fromAddress, date, Utils.getLabelNames(labels));
           labels.forEach((label) => {
             thread.addLabel(label);

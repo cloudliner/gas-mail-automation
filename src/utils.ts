@@ -1,4 +1,6 @@
-export default class Utils {
+import { LogLevel, LogWrapper } from "./log-wrapper";
+
+export class Utils {
   public static getProperyValue(property: string): string {
     if (property) {
       const value = PropertiesService.getScriptProperties().getProperty(property);
@@ -43,8 +45,9 @@ export default class Utils {
 
   public static handleExecuteLog(subTitle: string) {
     const email = Session.getActiveUser().getEmail();
-    const htmlBody = Logger.getLog();
-    MailApp.sendEmail(email, `GAS-Log: ${subTitle}`, htmlBody,
+    const title = `GAS-Log: ${subTitle}`;
+    const htmlBody = LogWrapper.getLog(title, LogLevel.INFO);
+    MailApp.sendEmail(email, title, htmlBody,
                       { htmlBody, noReply: true });
   }
 
@@ -53,13 +56,14 @@ export default class Utils {
     let errorTitle = "Error";
     if (e.message === "TimeOutException") {
       errorTitle = "TimeOut";
-      Logger.log(e);
+      LogWrapper.log(e);
     } else {
-      Logger.log('%s: %s (line: %s, file: "%s") Stack: "%s"<br/>',
+      LogWrapper.log('%s: %s (line: %s, file: "%s") Stack: "%s"<br/>',
                     e.name || "", e.message || "", e.lineNumber || "", e.fileName || "", e.stack || "");
     }
-    const htmlBody = Logger.getLog();
-    MailApp.sendEmail(email, `GAS-Log: ${subTitle}: ${errorTitle}`, htmlBody,
+    const title = `GAS-Log: ${subTitle}: ${errorTitle}`;
+    const htmlBody = LogWrapper.getLog(title, LogLevel.ERROR);
+    MailApp.sendEmail(email, title, htmlBody,
                       { htmlBody, noReply: true });
   }
 }
