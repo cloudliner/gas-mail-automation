@@ -1,3 +1,4 @@
+import LogWrapper from "./log-wrapper";
 import Utils from "./utils";
 
 // Automatic Delete Sample
@@ -56,9 +57,9 @@ function automaticDelete() {
           thread.moveToTrash();
           if (!isExecuted) {
             isExecuted = true;
-            Logger.log('<span style="font-weight: bold;">%s &gt;----</span><br/>', settingName);
+            LogWrapper.log('<span style="font-weight: bold;">%s &gt;----</span><br/>', settingName);
           }
-          Logger.log("Subject: %s, From: %s, Date: %s<br/>", messageSubject, from, date);
+          LogWrapper.log("Subject: %s, From: %s, Date: %s<br/>", messageSubject, from, date);
         }
 
         const now = Date.now();
@@ -70,7 +71,7 @@ function automaticDelete() {
 
       if (isExecuted) {
         executes.push(settingName);
-        Logger.log('<span style="font-weight: bold;">----&gt; %s</span><br/>', settingName);
+        LogWrapper.log('<span style="font-weight: bold;">----&gt; %s</span><br/>', settingName);
       }
     });
     if (executes.length !== 0) {

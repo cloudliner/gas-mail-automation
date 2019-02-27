@@ -1,3 +1,5 @@
+import LogWrapper from "./log-wrapper";
+
 export default class Utils {
   public static getProperyValue(property: string): string {
     if (property) {
@@ -43,7 +45,7 @@ export default class Utils {
 
   public static handleExecuteLog(subTitle: string) {
     const email = Session.getActiveUser().getEmail();
-    const htmlBody = Logger.getLog();
+    const htmlBody = LogWrapper.getLog();
     MailApp.sendEmail(email, `GAS-Log: ${subTitle}`, htmlBody,
                       { htmlBody, noReply: true });
   }
@@ -53,12 +55,12 @@ export default class Utils {
     let errorTitle = "Error";
     if (e.message === "TimeOutException") {
       errorTitle = "TimeOut";
-      Logger.log(e);
+      LogWrapper.log(e);
     } else {
-      Logger.log('%s: %s (line: %s, file: "%s") Stack: "%s"<br/>',
+      LogWrapper.log('%s: %s (line: %s, file: "%s") Stack: "%s"<br/>',
                     e.name || "", e.message || "", e.lineNumber || "", e.fileName || "", e.stack || "");
     }
-    const htmlBody = Logger.getLog();
+    const htmlBody = LogWrapper.getLog();
     MailApp.sendEmail(email, `GAS-Log: ${subTitle}: ${errorTitle}`, htmlBody,
                       { htmlBody, noReply: true });
   }

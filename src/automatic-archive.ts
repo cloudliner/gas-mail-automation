@@ -1,3 +1,4 @@
+import LogWrapper from "./log-wrapper";
 import Utils from "./utils";
 
 // Automatic Archive Sample
@@ -38,7 +39,7 @@ function automaticArchive() {
 
       if (hour % 24 === 0 && minute < 5) {
         threads = GmailApp.search(generalCondition, 0, 100);
-        Logger.log('<span style="font-weight: bold;">Running night batch for %s(%s)...</span><br/>',
+        LogWrapper.log('<span style="font-weight: bold;">Running night batch for %s(%s)...</span><br/>',
           settingName, threads.length);
       } else {
         threads = GmailApp.search(generalCondition, 0, searchMax);
@@ -128,9 +129,9 @@ function automaticArchive() {
           });
           if (!isExecuted) {
             isExecuted = true;
-            Logger.log('<span style="font-weight: bold;">%s &gt;----</span><br/>', settingName);
+            LogWrapper.log('<span style="font-weight: bold;">%s &gt;----</span><br/>', settingName);
           }
-          Logger.log("Subject: %s, From: %s, Date: %s<br/>", messageSubject, from, date);
+          LogWrapper.log("Subject: %s, From: %s, Date: %s<br/>", messageSubject, from, date);
         }
 
         const now = Date.now();
@@ -142,7 +143,7 @@ function automaticArchive() {
 
       if (isExecuted) {
         executes.push(settingName);
-        Logger.log('<span style="font-weight: bold;">----&gt; %s</span><br/>', settingName);
+        LogWrapper.log('<span style="font-weight: bold;">----&gt; %s</span><br/>', settingName);
       }
     });
     if (executes.length !== 0) {
