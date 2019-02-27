@@ -7,8 +7,5 @@
     "https://www.googleapis.com/auth/script.scriptapp"
   ],
   "dependencies": {},
-  "exceptionLogging": "STACKDRIVER",
-  "executionApi": {
-    "access": "ANYONE"
-  }
+  "exceptionLogging": "STACKDRIVER"
 }
