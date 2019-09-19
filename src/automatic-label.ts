@@ -19,9 +19,7 @@ function automaticLabel() {
 
     const spreadsheet = SpreadsheetApp.openById(labelSpreadsheetId);
 
-    const sheetSettings = spreadsheet.getSheetByName("Settings");
-    const rangeSettings = sheetSettings.getRange(2, 1, sheetSettings.getLastRow() - 1, sheetSettings.getLastColumn());
-    const rowSettings = rangeSettings.getValues();
+    const rowSettings = Utils.getSheetSettings(spreadsheet, "Settings");
 
     const generalCondition = "is:inbox";
     const hour = start.getHours();

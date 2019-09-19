@@ -15,9 +15,7 @@ function automaticArchive() {
 
     const spreadsheet = SpreadsheetApp.openById(archiveSpreadsheetId);
 
-    const sheetSettings = spreadsheet.getSheetByName("Settings");
-    const rangeSettings = sheetSettings.getRange(2, 1, sheetSettings.getLastRow() - 1, sheetSettings.getLastColumn());
-    const rowSettings = rangeSettings.getValues();
+    const rowSettings = Utils.getSheetSettings(spreadsheet, "Settings");
 
     rowSettings.forEach((rowSetting) => {
       const settingName = rowSetting[0] as string;
@@ -45,10 +43,7 @@ function automaticArchive() {
         threads = GmailApp.search(generalCondition, 0, searchMax);
       }
 
-      const sheetConditions = spreadsheet.getSheetByName(detailConditionSheetName);
-      const rangeConditions =
-        sheetConditions.getRange(2, 1, sheetConditions.getLastRow() - 1, sheetConditions.getLastColumn());
-      const rowConditions = rangeConditions.getValues();
+      const rowConditions = Utils.getSheetSettings(spreadsheet, detailConditionSheetName);
 
       const conditions = new Array();
 

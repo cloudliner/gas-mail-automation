@@ -14,9 +14,7 @@ function automaticDelete() {
 
     const spreadsheet = SpreadsheetApp.openById(deleteSpreadsheetId);
 
-    const sheetSettings = spreadsheet.getSheetByName("Settings");
-    const rangeSettings = sheetSettings.getRange(2, 1, sheetSettings.getLastRow() - 1, sheetSettings.getLastColumn());
-    const rowSettings = rangeSettings.getValues();
+    const rowSettings = Utils.getSheetSettings(spreadsheet, "Settings");
 
     rowSettings.forEach((rowSetting) => {
       const settingName = rowSetting[0] as string;

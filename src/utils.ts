@@ -43,6 +43,16 @@ export class Utils {
     return labelNames;
   }
 
+  public static getSheetSettings(spreadsheet: GoogleAppsScript.Spreadsheet.Spreadsheet, sheetName: string) {
+    const sheetSettings = spreadsheet.getSheetByName(sheetName);
+    if (! sheetSettings) {
+      throw Error(`Sheet: ${sheetName} is none`);
+    }
+    const rangeSettings = sheetSettings.getRange(2, 1, sheetSettings.getLastRow() - 1, sheetSettings.getLastColumn());
+    const rowSettings = rangeSettings.getValues();
+    return rowSettings;
+  }
+
   public static handleExecuteLog(subTitle: string) {
     if (this.isDebug) {
       const email = Session.getActiveUser().getEmail();
