@@ -37,6 +37,7 @@ function automaticLabel() {
 
     const customers: Array<{
       addressConditions: RegExp[];
+      excludeAddressConditions: RegExp[];
       labels: GoogleAppsScript.Gmail.GmailLabel[];
       subjectConditions: RegExp[];
       toLimit: number}> = [];
@@ -46,6 +47,7 @@ function automaticLabel() {
       const addressStr = rowSetting[2] as string;
       const subjectStr = rowSetting[3] as string;
       const toLimitLocal = rowSetting[4] ? rowSetting[4] as number : toLimitGrobal;
+      const excludeAddressStr = rowSetting[5] as string;
 
       const labelList = Utils.getLabelObjectList(productLabelNames);
       const customerLabelObject = Utils.getLabelObject(customerLabelName);
@@ -71,8 +73,18 @@ function automaticLabel() {
         });
       }
 
+      const excludeAddressRegexs: RegExp[] = [];
+      if (excludeAddressStr && excludeAddressStr.trim().length !== 0) {
+        const excludeAddressStrs = excludeAddressStr.split(",");
+        excludeAddressStrs.forEach((simgleAddressStr) => {
+          const addressRegex = new RegExp(simgleAddressStr.trim());
+          excludeAddressRegexs.push(addressRegex);
+        });
+      }
+
       customers.push({
         addressConditions: addressRegexs,
+        excludeAddressConditions: excludeAddressRegexs,
         labels: labelList,
         subjectConditions: subjectRegexs,
         toLimit: toLimitLocal,
@@ -94,6 +106,7 @@ function automaticLabel() {
         const subjectConditions = customer.subjectConditions;
         const labels = customer.labels;
         const toLimit = customer.toLimit;
+        const excludeAddressConditions = customer.excludeAddressConditions;
 
         if (toLimit < to.length) {
           return;
@@ -120,6 +133,22 @@ function automaticLabel() {
           if (messageSubject && messageSubject.match(condition)) {
             match = true;
           }
+        });
+
+        excludeAddressConditions.forEach((condition) => {
+          if (fromAddress && fromAddress.match(condition)) {
+            match = false;
+          }
+          to.forEach((toAddress) => {
+            if (toAddress && toAddress.match(condition)) {
+              match = false;
+            }
+          });
+          cc.forEach((ccAddress) => {
+            if (ccAddress && ccAddress.match(condition)) {
+              match = false;
+            }
+          });
         });
 
         if (match) {
