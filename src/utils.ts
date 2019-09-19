@@ -69,5 +69,20 @@ export class Utils {
                       { htmlBody, noReply: true });
   }
 
-  private static isDebug = false;
+  private static _isDebug = false;
+
+  private static _isInit = false;
+
+  private static get isDebug(): boolean {
+    if (! this._isInit) {
+      try {
+        const debug = this.getProperyValue("Debug");
+        this._isDebug = (debug === "true");
+      } catch (e) {
+        LogWrapper.log(e);
+      }
+      this._isInit = true;
+    }
+    return this._isDebug;
+  }
 }
