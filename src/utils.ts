@@ -44,11 +44,13 @@ export class Utils {
   }
 
   public static handleExecuteLog(subTitle: string) {
-    const email = Session.getActiveUser().getEmail();
-    const title = `GAS-Log: ${subTitle}`;
-    const htmlBody = LogWrapper.getLog(title, LogLevel.INFO);
-    MailApp.sendEmail(email, title, htmlBody,
-                      { htmlBody, noReply: true });
+    if (this.isDebug) {
+      const email = Session.getActiveUser().getEmail();
+      const title = `GAS-Log: ${subTitle}`;
+      const htmlBody = LogWrapper.getLog(title, LogLevel.INFO);
+      MailApp.sendEmail(email, title, htmlBody,
+                        { htmlBody, noReply: true });
+    }
   }
 
   public static handleException(e: any, subTitle: string) {
@@ -66,4 +68,6 @@ export class Utils {
     MailApp.sendEmail(email, title, htmlBody,
                       { htmlBody, noReply: true });
   }
+
+  private static isDebug = false;
 }
